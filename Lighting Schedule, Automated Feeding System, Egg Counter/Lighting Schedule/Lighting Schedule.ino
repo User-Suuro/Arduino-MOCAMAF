@@ -329,10 +329,14 @@ void loop() {
   }
 
   //if egg count database reached its, limit clear database
-  if(day_count == 365){
-    for (int i= 0; i < 365; i++) {
+  if(day_count == 400){
+    for (int i= 0; i < 400; i++) {
       egg_count_record_day[i] = 0;
       day_count = 0;
+    }
+	for (addr_EEPROM = 0; addr_EEPROM < 4096; addr_EEPROM++) { 
+      eeprom.eeprom_write(addr_EEPROM, (unsigned char) (0));
+      if (int i = addr_EEPROM % 100 == 0) lcd.print("."); // Prints a '.' every 100 writes to EEPROM
     }
   }
   
