@@ -67,7 +67,7 @@ int ServoPin2 = 11;
 relay -> 
 ds3231 -> SDA, SCL
 lcd ->  SDA, SCL, (A4, A5)
-pin 3 -> RESET
+pin 2 -> RESET
 */
 
 int reset_count = 0;
