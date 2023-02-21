@@ -338,6 +338,8 @@ void loop() {
       eeprom.eeprom_write(addr_EEPROM, (unsigned char) (0));
       if (int i = addr_EEPROM % 100 == 0) lcd.print("."); // Prints a '.' every 100 writes to EEPROM
     }
+	currentTime = 0;
+	return;
   }
   
   //only active depending on mode count
