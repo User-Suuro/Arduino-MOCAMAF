@@ -19,6 +19,7 @@ unsigned long previousTime_5 = 0;
 
 float h = 0;
 float t = 0;
+
 float hic = 0;
 float hic2 = 0;
 
@@ -31,6 +32,11 @@ float lowest_temp_1 = 0;
 float highest_temp_2 = 0;
 float lowest_temp_2 = 1000; //starting value
 
+float highest_temp_3 = 0;
+float lowest_temp_3 = 0;
+
+float highest_temp_4 = 0;
+float lowest_temp_4 = 0;
 // TO DO:
 //automated time (asynchronous)
 
@@ -74,11 +80,13 @@ void setup() {
   Serial.print("Serial OK");
   dht.begin();
   delay(2000);
-
+  t = dht.readTemperature();
+  h = dht.readHumidity();
   hic = dht.computeHeatIndex(t, h, false);
   highest_temp_2 = hic;
   lowest_temp_2 = hic;
- 
+  highest_temp_4 = t;
+  lowest_temp_4 = t;
   minTemp = EEPROM.read(0);
   maxTemp = EEPROM.read(1);
 }
@@ -105,10 +113,23 @@ void loop() {
         highest_temp_2 = hic2;
       }
     }
-    else if(hic < hic2){
+      if (hic < hic2){
       lowest_temp_1 = hic2;
       if (lowest_temp_1 <= lowest_temp_2){
         lowest_temp_2 = hic2; 
+      }
+    }
+
+    if (t > t2){
+      highest_temp_3 = t2;
+      if (highest_temp_3 >= highest_temp_4){
+        highest_temp_3 = t2;
+      }
+    }
+    if  (t < t2){
+      lowest_temp_3 = t2;
+      if (lowest_temp_3 <= lowest_temp_4){
+        lowest_temp_3 = t2; 
       }
     }
 
@@ -214,7 +235,7 @@ void loop() {
       modeValue = 0;
       lcd.clear();
     
-    if (mode > 3){ //set limit mode number
+    if (mode > 4){ //set limit mode number
       mode = 0;
     }
     return;
@@ -230,15 +251,16 @@ void loop() {
         if (currentTime - previousTime_1 >= eventTime_1_updateLCD){
           lcd.clear();
           previousTime_1 = currentTime;
-          lcd.print("Heat Index: ");
+          lcd.print("Index: ");
           lcd.print(hic);
-          lcd.print("°");
+          lcd.print(" C");
           lcd.setCursor(0, 1);
-          lcd.print("T: ");
+          lcd.print("T:");
           lcd.print(t);
-          lcd.setCursor(5, 1);
-          lcd.print("H: ");
-          lcd.setCursor(9, 1);
+          lcd.setCursor(8, 1);
+          lcd.print("H:");
+          lcd.setCursor(10, 1);
+          lcd.print(h);
         }
     }else if (mode == 1){
       if (currentTime - previousTime_1 >= eventTime_1_updateLCD){
@@ -262,17 +284,30 @@ void loop() {
     }else if(mode == 3){
       if (currentTime - previousTime_1 >= eventTime_1_updateLCD){
         lcd.clear();
-        lcd.print("High Temp: ");
+        lcd.print("HighIndex: ");
         lcd.print(highest_temp_2);
         lcd.print(" C");
         lcd.setCursor(0, 1);
-        lcd.print("Low Temp: ");
+        lcd.print("LowIndex: ");
         lcd.print(lowest_temp_2);
-        previousTime_1 = currentTime; 
+        previousTime_1 = currentTime;
+      } 
+      }else if(mode == 4){
+         if (currentTime - previousTime_1 >= eventTime_1_updateLCD){
+           
+          lcd.clear();
+          lcd.print("High Temp: ");
+          lcd.print(highest_temp_4);
+          lcd.print(" C");
+          lcd.setCursor(0, 1);
+          lcd.print("Low Temp: ");
+          lcd.print(lowest_temp_4);
+          previousTime_1 = currentTime;
+        }
       }
     }
   };
-};
+
 
 
 
