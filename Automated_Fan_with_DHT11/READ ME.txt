@@ -1,0 +1,2 @@
+Version 1 -> Temperature and Humidity Only
+Version 2 -> Heat Index is included
